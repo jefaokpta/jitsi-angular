@@ -9,8 +9,8 @@ declare var JitsiMeetExternalAPI: any;
 })
 export class JitsiComponent implements OnInit, AfterViewInit {
 
-    domain: string = "meet.jit.si";
-    room: any;
+    domain = 'meet.jit.si';
+    room: string;
     options: any;
     api: any;
     user: any;
@@ -19,14 +19,12 @@ export class JitsiComponent implements OnInit, AfterViewInit {
     isAudioMuted = false;
     isVideoMuted = false;
 
-    constructor(
-        private router: Router
-    ) { }
+    constructor(private router: Router) { }
 
     ngOnInit(): void {
-        this.room = 'bwb-bfqi-vmh'; // set your room name
+        this.room = 'jefones-test'; // set your room name
         this.user = {
-            name: 'Akash Verma' // set your username
+            name: 'Jefones' // set your username
         }
     }
 
@@ -60,58 +58,59 @@ export class JitsiComponent implements OnInit, AfterViewInit {
 
 
     handleClose = () => {
-        console.log("handleClose");
+        console.log('handleClose');
     }
 
     handleParticipantLeft = async (participant) => {
-        console.log("handleParticipantLeft", participant); // { id: "2baa184e" }
-        const data = await this.getParticipants();
+        console.log('handleParticipantLeft', participant); // { id: "2baa184e" }
+        // const data = await this.getParticipants();
     }
 
     handleParticipantJoined = async (participant) => {
-        console.log("handleParticipantJoined", participant); // { id: "2baa184e", displayName: "Shanu Verma", formattedDisplayName: "Shanu Verma" }
-        const data = await this.getParticipants();
+        console.log('handleParticipantJoined', participant); // { id: "2baa184e", displayName: "Shanu Verma", formattedDisplayName: "Shanu Verma" }
+        // const data = await this.getParticipants();
     }
 
     handleVideoConferenceJoined = async (participant) => {
-        console.log("handleVideoConferenceJoined", participant); // { roomName: "bwb-bfqi-vmh", id: "8c35a951", displayName: "Akash Verma", formattedDisplayName: "Akash Verma (me)"}
-        const data = await this.getParticipants();
+        console.log('handleVideoConferenceJoined', participant); // { roomName: "bwb-bfqi-vmh", id: "8c35a951", displayName: "Akash Verma", formattedDisplayName: "Akash Verma (me)"}
+        // const data = await this.getParticipants();
     }
 
     handleVideoConferenceLeft = () => {
-        console.log("handleVideoConferenceLeft");
+        console.log('handleVideoConferenceLeft');
+        this.api.dispose();
         this.router.navigate(['/thank-you']);
     }
 
     handleMuteStatus = (audio) => {
-        console.log("handleMuteStatus", audio); // { muted: true }
+        console.log('handleMuteStatus', audio); // { muted: true }
     }
 
     handleVideoStatus = (video) => {
-        console.log("handleVideoStatus", video); // { muted: true }
+        console.log('handleVideoStatus', video); // { muted: true }
     }
 
-    getParticipants() {
+    private getParticipants() {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(this.api.getParticipantsInfo()); // get all participants
-            }, 500)
+            }, 500);
         });
     }
 
     // custom events
     executeCommand(command: string) {
-        this.api.executeCommand(command);;
-        if(command == 'hangup') {
+        this.api.executeCommand(command);
+        if (command === 'hangup') {
             this.router.navigate(['/thank-you']);
             return;
         }
 
-        if(command == 'toggleAudio') {
+        if (command === 'toggleAudio') {
             this.isAudioMuted = !this.isAudioMuted;
         }
 
-        if(command == 'toggleVideo') {
+        if (command === 'toggleVideo') {
             this.isVideoMuted = !this.isVideoMuted;
         }
     }
